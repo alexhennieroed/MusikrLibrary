@@ -1,6 +1,7 @@
 package com.alexhennieroed.musikrlib.managers;
 
 import com.alexhennieroed.musikrlib.interfaces.MusicInterface;
+import javafx.scene.control.Alert;
 
 import java.security.InvalidParameterException;
 
@@ -35,7 +36,15 @@ public class Director {
      * Private constructor of the singleton Director
      */
     private Director() {
-        settings = new Settings("/com/alexhennieroed/musikrlib/settings.txt");
+        try {
+            settings = new Settings("/com/alexhennieroed/musikrlib/settings.txt");
+        } catch (MissingSettingException e) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("There Has Been an Issue with the Settings File");
+            alert.setHeaderText("");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     /**

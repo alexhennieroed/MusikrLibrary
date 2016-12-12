@@ -24,7 +24,11 @@ class SongLoader {
      * @return the loaded song
      */
     public Song loadSong(Song s) throws InvalidParameterException {
-        return musicInterface.getSong(s);
+        if (s != null) {
+            return musicInterface.getSong(s);
+        } else {
+            throw new InvalidParameterException("The song to load cannot be null.");
+        }
     }
 
 }
