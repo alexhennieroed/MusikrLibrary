@@ -9,6 +9,7 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,28 +22,18 @@ import java.util.List;
 class JaudioConnector implements SongDataInterface {
 
     @Override
-    public List<String> getData(Song s) {
-        try {
-            List<String> data = new ArrayList<>();
-            AudioFile audioFile = AudioFileIO.read(new File(s.getSongLocation()));
-            Tag tag = audioFile.getTag();
-            AudioHeader header = audioFile.getAudioHeader();
-            data.add(tag.getFirst(FieldKey.TITLE));
-            data.add(tag.getFirst(FieldKey.ARTIST));
-            data.add(tag.getFirst(FieldKey.ALBUM));
-            data.add(tag.getFirst(FieldKey.GENRE));
-            data.add(Integer.toString(header.getTrackLength()));
-            return data;
-        } catch (IOException e) {
-            System.out.println("Java IOException.");
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println("JaudioTagger exception.");
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
+    public List<String> getData(Song s)
+        throws Exception {
+        List<String> data = new ArrayList<>();
+        AudioFile audioFile = AudioFileIO.read(new File(s.getSongLocation()));
+        Tag tag = audioFile.getTag();
+        AudioHeader header = audioFile.getAudioHeader();
+        data.add(tag.getFirst(FieldKey.TITLE));
+        data.add(tag.getFirst(FieldKey.ARTIST));
+        data.add(tag.getFirst(FieldKey.ALBUM));
+        data.add(tag.getFirst(FieldKey.GENRE));
+        data.add(Integer.toString(header.getTrackLength()));
+        return data;
     }
 
 }

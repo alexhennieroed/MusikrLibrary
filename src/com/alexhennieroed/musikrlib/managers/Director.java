@@ -10,7 +10,8 @@ import java.security.InvalidParameterException;
  * Singleton
  *
  * When using it, the MusicInterface must be set before getting the instance
- *      of the MusicParser otherwise a NullPointerException will be thrown
+ *      of the MusicParser or MusicManager otherwise
+ *      a NullPointerException will be thrown
  *
  * @author Alexander Hennie-Roed
  * @version 1.0.0
@@ -25,12 +26,12 @@ public class Director {
     /**
      * Instances of required managers and interfaces
      */
-    private static MusicManager musicManager;
-    private static MusicParser musicParser;
-    private static SongLoader songLoader;
-    private static MusicInterface musicInterface;
-    private static JaudioConnector connector;
-    private static Settings settings;
+    private MusicManager musicManager;
+    private MusicParser musicParser;
+    private SongLoader songLoader;
+    private MusicInterface musicInterface;
+    private JaudioConnector connector;
+    private Settings settings;
 
     /**
      * Private constructor of the singleton Director
@@ -38,7 +39,7 @@ public class Director {
     private Director() {
         try {
             settings = new Settings(getClass().getResource("/com/alexhennieroed/musikrlib/settings.txt"));
-        } catch (MissingSettingException e) {
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("There Has Been an Issue with the Settings File");
             alert.setHeaderText("");
@@ -58,7 +59,7 @@ public class Director {
      * @return the current MusicManager
      * @throws NullPointerException if the current MusicManager is null
      */
-    public static MusicManager getMusicManager() throws NullPointerException {
+    public MusicManager getMusicManager() throws NullPointerException {
         if (musicManager != null) {
             return musicManager;
         } else {
@@ -67,17 +68,30 @@ public class Director {
     }
 
     /**
+     * Returns the Director's MusicParser
+     * @return the MusicParser
+     * @throws NullPointerException if the MusicParser is null
+     */
+    public MusicParser getMusicParser() throws NullPointerException {
+        if (musicParser != null) {
+            return musicParser;
+        } else {
+            throw new NullPointerException("The current music parser is null.");
+        }
+    }
+
+    /**
      * Returns the Director's settings
      * @return the settings
      */
-    public static Settings getSettings() { return settings; }
+    public Settings getSettings() { return settings; }
 
     /**
      * Returns the Director's MusicInterface
      * @return the MusicInterface
      * @throws NullPointerException if the current MusicInterface is null
      */
-    public static MusicInterface getMusicInterface() throws NullPointerException {
+    public MusicInterface getMusicInterface() throws NullPointerException {
         if (musicInterface != null) {
             return musicInterface;
         } else {
@@ -90,7 +104,7 @@ public class Director {
      * @param mi the new MusicInterface
      * @throws InvalidParameterException if the new MusicInterface is null
      */
-    public static void setMusicInterface(MusicInterface mi)
+    public void setMusicInterface(MusicInterface mi)
             throws InvalidParameterException {
         if (mi != null) {
             musicInterface = mi;

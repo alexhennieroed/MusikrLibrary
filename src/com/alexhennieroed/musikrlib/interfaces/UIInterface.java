@@ -2,6 +2,7 @@ package com.alexhennieroed.musikrlib.interfaces;
 
 import com.alexhennieroed.musikrlib.model.Song;
 
+import java.io.IOException;
 import java.security.InvalidParameterException;
 
 /**
@@ -20,8 +21,9 @@ public interface UIInterface {
 
     /**
      * Plays the current song
+     * @throws IOException if there is an issue finding the current song
      */
-    void play();
+    void play() throws IOException;
 
     /**
      * Pauses the playback of the current song
@@ -30,15 +32,17 @@ public interface UIInterface {
 
     /**
      * Sets the next song as the current song and plays it
+     * @throws IOException if there is a problem playing the new song
      */
-    void next();
+    void next() throws IOException;
 
     /**
      * If the track has been playing for more than ten seconds,
      * the previous song is set as the current song and played.
      * Otherwise the current track is started from the beginning
+     * @throws IOException if there is a problem playing the new song
      */
-    void prev();
+    void prev() throws IOException;
 
     /**
      * Toggles the shuffle feature

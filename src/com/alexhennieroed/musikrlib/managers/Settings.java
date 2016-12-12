@@ -1,9 +1,6 @@
 package com.alexhennieroed.musikrlib.managers;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URISyntaxException;
+import java.io.*;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -18,21 +15,17 @@ import java.util.Scanner;
 
     private String musicDirectory;
 
-    Settings(URL settingsFilePath)
-            throws MissingSettingException {
-        try {
-            this.settingsFile = new File(settingsFilePath.toURI());
-            parseSettings();
-        } catch (URISyntaxException e) {
-            System.out.println("Settings file URI is wrong.");
-            System.out.println(e.getMessage());
-        }
+    Settings(URL settingsFile)
+            throws MissingSettingException, IOException {
+        this.settingsFile = new File(settingsFile.getPath());
+        parseSettings();
     }
 
     /**
      * Parses the settings file to initialize all necessary fields
      */
-    private void parseSettings() throws MissingSettingException {
+    private void parseSettings()
+            throws MissingSettingException, IOException {
         try {
             Scanner scanner = new Scanner(settingsFile);
             //get the musicDirectory
@@ -42,9 +35,6 @@ import java.util.Scanner;
                 throw new MissingSettingException("Music Source is missing.");
             }
             scanner.close();
-        } catch (IOException e) {
-            System.out.println("Settings file was not found.");
-            System.out.println(e.getMessage());
         } catch (ArrayIndexOutOfBoundsException a) {
             musicDirectory = "";
         }
@@ -53,14 +43,10 @@ import java.util.Scanner;
     /**
      * Saves the current settings to the settings file
      */
-    private void saveSettings() {
-        try {
-            PrintStream stream = new PrintStream(settingsFile);
-            stream.println("Music-Source:" + musicDirectory);
-            stream.close();
-        } catch (IOException e) {
-            System.out.println("Settings file does not exist.");
-        }
+    private void saveSettings() throws IOException {
+        PrintStream stream = new PrintStream(settingsFile);
+        stream.println("Music-Source:" + musicDirectory);
+        stream.close();
     }
 
     /**
@@ -73,7 +59,8 @@ import java.util.Scanner;
      * Sets the music directory to the new directory
      * @param musicDirectory the new music directory
      */
-    public void setMusicDirectory(String musicDirectory) {
+    public void setMusicDirectory(String musicDirectory)
+        throws IOException {
         this.musicDirectory = musicDirectory;
         saveSettings();
     }

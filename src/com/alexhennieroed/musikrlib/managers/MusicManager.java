@@ -74,15 +74,10 @@ public class MusicManager implements UIInterface {
     }
 
     @Override
-    public void play() {
-        try {
-            String songFileLoc = songLoader.loadSong(currentSong).getSongLocation().toString();
-            player = new MediaPlayer(new Media(songFileLoc));
-            player.play();
-        } catch (IOException e) {
-            System.out.println("Could not find the song's file");
-            System.out.println(e.getMessage());
-        }
+    public void play() throws IOException {
+        String songFileLoc = songLoader.loadSong(currentSong).getSongLocation().toString();
+        player = new MediaPlayer(new Media(songFileLoc));
+        player.play();
     }
 
     @Override
@@ -91,7 +86,7 @@ public class MusicManager implements UIInterface {
     }
 
     @Override
-    public void next() {
+    public void next() throws IOException {
         currentSong = nextSong;
         currentSongIndex = musicParser.getSongList().indexOf(currentSong);
         setPrevAndNextSong();
@@ -100,7 +95,7 @@ public class MusicManager implements UIInterface {
     }
 
     @Override
-    public void prev() {
+    public void prev() throws IOException {
         if (player.getCurrentTime().toSeconds() > 10) {
             currentSong = previousSong;
             currentSongIndex = musicParser.getSongList().indexOf(currentSong);
