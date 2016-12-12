@@ -1,14 +1,14 @@
 package com.alexhennieroed.musikrlib.model;
 
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URI;
 import java.security.InvalidParameterException;
 import java.util.List;
 
 /**
  * An object representing a song
  * @author Alexander Hennie-Roed
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class Song {
 
@@ -17,7 +17,7 @@ public class Song {
     private Album album;
     private List<Genre> genres;
     private Double duration;
-    private File songFile;
+    private URI songLocation;
 
     /**
      * Creates a new song based on general song data
@@ -31,7 +31,7 @@ public class Song {
         this.album = album;
         this.genres = null;
         this.duration = null;
-        this.songFile = null;
+        this.songLocation = null;
     }
 
     /**
@@ -79,26 +79,26 @@ public class Song {
     }
 
     /**
-     * Returns the song's file if it is not null
-     * @return the song's file
+     * Returns the song's URI if it is not null
+     * @return the song's URI
      * @throws FileNotFoundException if the file is null
      */
-    public File getSongFile() throws FileNotFoundException {
-        if (songFile != null) {
-            return songFile;
+    public URI getSongLocation() throws FileNotFoundException {
+        if (songLocation != null) {
+            return songLocation;
         } else {
-            throw new FileNotFoundException("The song " + name + " does not have a file associated with it.");
+            throw new FileNotFoundException("The song " + name + " does not have a location associated with it.");
         }
     }
 
     /**
-     * Sets the song's file to the specified one
-     * @param songFile the song's new file
-     * @throws InvalidParameterException if the new file is null
+     * Sets the song's URI to the specified one
+     * @param songLoc the song's new URI
+     * @throws InvalidParameterException if the new URI is null
      */
-    public void setSongFile(File songFile) throws InvalidParameterException {
-        if (songFile != null) {
-            this.songFile = songFile;
+    public void setSongLocation(URI songLoc) throws InvalidParameterException {
+        if (songLoc != null) {
+            this.songLocation = songLoc;
         } else {
             throw new InvalidParameterException("The file given as the song file is null.");
         }

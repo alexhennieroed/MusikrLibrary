@@ -5,14 +5,13 @@ import com.alexhennieroed.musikrlib.model.Song;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-import java.io.File;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 
 /**
  * Controls the current song and gives the data to the UI
  * @author Alexander Hennie-Roed
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class MusicManager implements UIInterface {
 
@@ -77,8 +76,8 @@ public class MusicManager implements UIInterface {
     @Override
     public void play() {
         try {
-            File songFile = songLoader.loadSong(currentSong).getSongFile();
-            player = new MediaPlayer(new Media(songFile.toURI().toString()));
+            String songFileLoc = songLoader.loadSong(currentSong).getSongLocation().toString();
+            player = new MediaPlayer(new Media(songFileLoc));
             player.play();
         } catch (IOException e) {
             System.out.println("Could not find the song's file");
