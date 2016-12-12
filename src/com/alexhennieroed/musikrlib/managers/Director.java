@@ -37,7 +37,7 @@ public class Director {
      */
     private Director() {
         try {
-            settings = new Settings("/com/alexhennieroed/musikrlib/settings.txt");
+            settings = new Settings(getClass().getResource("/com/alexhennieroed/musikrlib/settings.txt"));
         } catch (MissingSettingException e) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("There Has Been an Issue with the Settings File");
@@ -52,6 +52,25 @@ public class Director {
      * @return the instance
      */
     public static Director getInstance() { return director; }
+
+    /**
+     * Returns the Director's MusicManager
+     * @return the current MusicManager
+     * @throws NullPointerException if the current MusicManager is null
+     */
+    public static MusicManager getMusicManager() throws NullPointerException {
+        if (musicManager != null) {
+            return musicManager;
+        } else {
+            throw new NullPointerException("The current music manager is null.");
+        }
+    }
+
+    /**
+     * Returns the Director's settings
+     * @return the settings
+     */
+    public static Settings getSettings() { return settings; }
 
     /**
      * Returns the Director's MusicInterface

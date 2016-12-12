@@ -15,6 +15,8 @@ public interface MusicInterface {
 
     /**
      * Returns the song from the provider based on data in the song parameter
+     * This song should have a songFile associated with it
+     *
      * @param s basic info about the song
      * @return the song from the provider
      */

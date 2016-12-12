@@ -34,18 +34,15 @@ public interface UIInterface {
     void next();
 
     /**
-     * The previous song is set as the current song and played
+     * If the track has been playing for more than ten seconds,
+     * the previous song is set as the current song and played.
+     * Otherwise the current track is started from the beginning
      */
     void prev();
 
     /**
-     * Turns on the shuffle feature
+     * Toggles the shuffle feature
      */
-    void shuffleOn();
-
-    /**
-     * Turns off the shuffle feature
-     */
-    void shuffleOff();
+    void shuffleToggle();
 
 }

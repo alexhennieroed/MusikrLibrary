@@ -3,6 +3,8 @@ package com.alexhennieroed.musikrlib.managers;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Scanner;
 
 /**
@@ -10,16 +12,21 @@ import java.util.Scanner;
  * @author Alexander Hennie-Roed
  * @version 1.0.0
  */
-class Settings {
+ public class Settings {
 
     private File settingsFile;
 
     private String musicDirectory;
 
-    public Settings(String settingsFilePath)
+    Settings(URL settingsFilePath)
             throws MissingSettingException {
-        this.settingsFile = new File(settingsFilePath);
-        parseSettings();
+        try {
+            this.settingsFile = new File(settingsFilePath.toURI());
+            parseSettings();
+        } catch (URISyntaxException e) {
+            System.out.println("Settings file URI is wrong.");
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -38,7 +45,6 @@ class Settings {
         } catch (IOException e) {
             System.out.println("Settings file was not found.");
             System.out.println(e.getMessage());
-            e.printStackTrace();
         } catch (ArrayIndexOutOfBoundsException a) {
             musicDirectory = "";
         }

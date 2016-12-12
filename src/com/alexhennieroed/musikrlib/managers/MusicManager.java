@@ -2,11 +2,10 @@ package com.alexhennieroed.musikrlib.managers;
 
 import com.alexhennieroed.musikrlib.interfaces.UIInterface;
 import com.alexhennieroed.musikrlib.model.Song;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 
@@ -15,7 +14,7 @@ import java.security.InvalidParameterException;
  * @author Alexander Hennie-Roed
  * @version 1.0.0
  */
-class MusicManager implements UIInterface {
+public class MusicManager implements UIInterface {
 
     private Song currentSong;
     private int currentSongIndex;
@@ -26,20 +25,50 @@ class MusicManager implements UIInterface {
     private MusicParser musicParser;
     private SongLoader songLoader;
     private PlaybackStyle style;
-    private AudioStream audioStream;
+    private MediaPlayer player;
 
-    public MusicManager(MusicParser parser, SongLoader loader) {
+    /**
+     * Creates a new MusicManager with the specified parser and loader
+     * @param parser the MusicParser to use
+     * @param loader the SongLoader to use
+     */
+    MusicManager(MusicParser parser, SongLoader loader) {
         this.musicParser = parser;
         this.songLoader = loader;
+        this.shuffle = false;
         this.currentSong = musicParser.getSongList().get(0);
         this.currentSongIndex = 0;
+        setPrevAndNextSong();
+    }
+
+    /**
+     * Sets the previous and next song based on
+     */
+    private void setPrevAndNextSong() {
+        //if (!shuffle) {
+            if (currentSongIndex <= 0) {
+                previousSong = musicParser.getSongList().get(
+                        musicParser.getSongList().size() - 1);
+            } else {
+                previousSong = musicParser.getSongList().get(currentSongIndex - 1);
+            }
+            if (currentSongIndex >= musicParser.getSongList().size() - 1) {
+                nextSong = musicParser.getSongList().get(0);
+            } else {
+                nextSong = musicParser.getSongList().get(currentSongIndex + 1);
+            }
+        //} else {
+            //TODO
+        //}
     }
 
     @Override
     public void selectSong(Song song)
             throws InvalidParameterException {
         if (song != null) {
-            this.currentSong = song;
+            currentSong = songLoader.loadSong(song);
+            currentSongIndex = musicParser.getSongList().indexOf(currentSong);
+            setPrevAndNextSong();
         } else {
             throw new InvalidParameterException("The song selected is null.");
         }
@@ -49,39 +78,43 @@ class MusicManager implements UIInterface {
     public void play() {
         try {
             File songFile = songLoader.loadSong(currentSong).getSongFile();
-            audioStream = new AudioStream(new FileInputStream(songFile));
-            AudioPlayer.player.start(audioStream);
+            player = new MediaPlayer(new Media(songFile.toURI().toString()));
+            player.play();
         } catch (IOException e) {
             System.out.println("Could not find the song's file");
+            System.out.println(e.getMessage());
         }
     }
 
     @Override
     public void pause() {
-        AudioPlayer.player.stop(audioStream);
+        player.pause();
     }
 
     @Override
     public void next() {
-        currentSong = musicParser.getSongList().get(currentSongIndex + 1);
+        currentSong = nextSong;
+        currentSongIndex = musicParser.getSongList().indexOf(currentSong);
+        setPrevAndNextSong();
+        player.stop();
+        play();
     }
 
     @Override
     public void prev() {
-        if (currentSongIndex <= 0) {
-            currentSongIndex = musicParser.getSongList().size();
+        if (player.getCurrentTime().toSeconds() > 10) {
+            currentSong = previousSong;
+            currentSongIndex = musicParser.getSongList().indexOf(currentSong);
+            setPrevAndNextSong();
         }
-        currentSong = musicParser.getSongList().get(currentSongIndex - 1);
+        player.stop();
+        play();
     }
 
     @Override
-    public void shuffleOn() {
-        this.shuffle = true;
-    }
-
-    @Override
-    public void shuffleOff() {
-        this.shuffle = false;
+    public void shuffleToggle() {
+        //Currently has no effect on functionality
+        shuffle = !shuffle;
     }
 
     /**
