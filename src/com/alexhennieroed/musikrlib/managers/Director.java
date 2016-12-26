@@ -38,12 +38,12 @@ public class Director {
      */
     private Director() {
         try {
-            settings = new Settings(getClass().getResource("/com/alexhennieroed/musikrlib/settings.txt"));
+            settings = new Settings();//getClass().getResourceAsStream("/com/alexhennieroed/musikrlib/settings.txt"));
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("There Has Been an Issue with the Settings File");
             alert.setHeaderText("");
-            alert.setContentText(e.getMessage());
+            alert.setContentText(e.toString());
             alert.showAndWait();
         }
     }

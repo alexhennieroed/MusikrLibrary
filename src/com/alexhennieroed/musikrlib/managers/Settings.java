@@ -1,6 +1,7 @@
 package com.alexhennieroed.musikrlib.managers;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -11,14 +12,14 @@ import java.util.Scanner;
  */
  public class Settings {
 
-    private File settingsFile;
+    private InputStream settingsStream;
 
     private String musicDirectory;
 
-    Settings(URL settingsFile)
-            throws MissingSettingException, IOException {
-        this.settingsFile = new File(settingsFile.getPath());
-        parseSettings();
+    Settings()//InputStream settingsFile)
+            throws MissingSettingException, IOException, URISyntaxException {
+        //this.settingsStream = settingsFile;
+        //parseSettings();
     }
 
     /**
@@ -27,7 +28,7 @@ import java.util.Scanner;
     private void parseSettings()
             throws MissingSettingException, IOException {
         try {
-            Scanner scanner = new Scanner(settingsFile);
+            Scanner scanner = new Scanner(settingsStream);
             //get the musicDirectory
             if (scanner.hasNextLine()) {
                 musicDirectory = scanner.nextLine().split(":")[1];
@@ -44,9 +45,9 @@ import java.util.Scanner;
      * Saves the current settings to the settings file
      */
     private void saveSettings() throws IOException {
-        PrintStream stream = new PrintStream(settingsFile);
-        stream.println("Music-Source:" + musicDirectory);
-        stream.close();
+        //PrintStream stream = new PrintStream(settingsStream);
+        //stream.println("Music-Source:" + musicDirectory);
+        //stream.close();
     }
 
     /**
